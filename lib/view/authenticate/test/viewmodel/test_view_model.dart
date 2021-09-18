@@ -1,20 +1,24 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_onboard/core/constants/enums/app_theme_enums.dart';
-import 'package:flutter_onboard/core/init/network/network_manager.dart';
-import 'package:flutter_onboard/core/init/notifier/theme_notifier.dart';
-import 'package:flutter_onboard/view/authenticate/test/model/test_model.dart';
+import 'package:flutter_onboard/core/base/model/base_view_model.dart';
+import 'package:flutter_onboard/core/constants/enums/http_request_enum.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../core/constants/enums/app_theme_enums.dart';
+import '../../../../core/init/network/network_manager.dart';
+import '../../../../core/init/notifier/theme_notifier.dart';
+import '../model/test_model.dart';
+
 part 'test_view_model.g.dart';
 
 class TestViewModel = _TestViewModelBase with _$TestViewModel;
 
-abstract class _TestViewModelBase with Store {
-  BuildContext? context;
-
+abstract class _TestViewModelBase with Store, BaseViewModel {
   void setContext(BuildContext context) {
     this.context = context;
   }
+
+  void init() {}
 
   @observable
   bool isLoading = false;
@@ -38,10 +42,9 @@ abstract class _TestViewModelBase with Store {
   @action
   Future<void> getSampleRequest() async {
     isLoading = true;
-    final list =  await NetworkManager.instance!.dioGet<TestModel>('x', TestModel());
-    if (list is List){
-      
-    }
+    // final list = await NetworkManager.instance!.dioGet<TestModel>('x', TestModel());
+    final list = await coreDio.fetch2<List<TestModel> ,TestModel>('x', type: HttpTypes.GET, parseModel: TestModel());
+    if (list is List<TestModel>) {}
     isLoading = false;
   }
 }

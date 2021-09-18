@@ -32,28 +32,43 @@ class _TestViewState extends BaseState<TestView> {
   }
 
   Widget get scaffoldBody => Scaffold(
-        appBar: AppBar(
-          leading: Text(
-            LocaleManager.instance!.getStringValue(PreferencesKeys.TOKEN),
-          ),
-          title: textWelcomeWidget(),
-          actions: [
-            iconButonChangeTheme()
-          ],
-        ),
+        appBar: appBar(),
         floatingActionButton: floatingActionButtonNumberIncrement,
         body: textNumber,
       );
+
+  AppBar appBar() {
+    return AppBar(
+      leading: Text(
+        LocaleManager.instance!.getStringValue(PreferencesKeys.TOKEN),
+      ),
+      title: textWelcomeWidget(),
+      actions: [iconButonChangeTheme()],
+    );
+  }
+
+  Widget get textNumber {
+    return Column(
+      children: [
+        
+        Observer(
+          builder: (context) => Text(
+            viewModel!.number.toString(),
+          ),
+        ),
+      ],
+    );
+  }
 
   Text textWelcomeWidget() => Text(LocaleKeys.welcome.locale);
 
   IconButton iconButonChangeTheme() {
     return IconButton(
-            icon: Icon(Icons.change_history),
-              onPressed: () {
-                context.locale = LanguageManager.instance!.enLocale;
-              },
-          );
+      icon: Icon(Icons.change_history),
+      onPressed: () {
+        context.locale = LanguageManager.instance!.enLocale;
+      },
+    );
   }
 
   FloatingActionButton get floatingActionButtonNumberIncrement {
@@ -62,7 +77,5 @@ class _TestViewState extends BaseState<TestView> {
     );
   }
 
-  Widget get textNumber {
-    return Observer(builder: (context) => Text(viewModel!.number.toString()));
-  }
+  
 }
